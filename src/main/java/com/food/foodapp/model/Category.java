@@ -1,6 +1,7 @@
 package com.food.foodapp.model;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 import org.springframework.data.util.Lazy;
@@ -30,6 +31,11 @@ public class Category {
 //  below tells app to NOT collect all related values
   @LazyCollection(LazyCollectionOption.FALSE)
   private List<Recipe> recipeList;
+
+  @ManyToOne // many objects belong to this one instance
+  @JoinColumn(name = "user_id")
+  @JsonIgnore // ignore data from user info
+  private User user;
 
 
   public Category() {
@@ -66,6 +72,14 @@ public class Category {
 
   public void setRecipeList(List<Recipe> recipeList) {
     this.recipeList = recipeList;
+  }
+
+  public User getUser() {
+    return user;
+  }
+
+  public void setUser(User user) {
+    this.user = user;
   }
 }
 

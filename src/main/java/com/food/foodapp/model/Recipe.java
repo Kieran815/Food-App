@@ -13,16 +13,22 @@ public class Recipe {
   @Column
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
+
   @Column
   private String name;
+
   @Column
   private String time;
+
   @Column
   private Integer portions;
+
   @Column
   private String ingredients;
+
   @Column
   private String steps;
+
   @Column
   private Boolean isPublic;
 
@@ -30,6 +36,11 @@ public class Recipe {
   @ManyToOne
   @JoinColumn(name = "category_id")
   private Category category;
+
+  @ManyToOne
+  @JoinColumn(name = "user_id")
+  @JsonIgnore
+  private User user;
 
 //  default constructor for Recipe
 
@@ -103,5 +114,13 @@ public class Recipe {
 
   public void setCategory(Category category) {
     this.category = category;
+  }
+
+  public User getUser() {
+    return user;
+  }
+
+  public void setUser(User user) {
+    this.user = user;
   }
 }
