@@ -1,8 +1,10 @@
 package com.food.foodapp.controller;
 
+import com.food.foodapp.model.Request.LoginRequest;
 import com.food.foodapp.model.User;
 import com.food.foodapp.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,6 +29,12 @@ public class UserController {
     LOGGER.info("Calling createUser from Controller.");
     return userService.createUser(userObject);
   }
+
+  @PostMapping("/login")
+  public ResponseEntity<?> loginUser(@RequestBody LoginRequest loginRequest) { // pulls `username` and `password` from `LoginRequest` class in `Model/Request`
+    return userService.loginUser(loginRequest);
+  }
+
 }
 
 

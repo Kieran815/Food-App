@@ -2,8 +2,10 @@ package com.food.foodapp.controller;
 
 import com.food.foodapp.model.Category;
 import com.food.foodapp.model.Recipe;
+import com.food.foodapp.security.MyUserDetails;
 import com.food.foodapp.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

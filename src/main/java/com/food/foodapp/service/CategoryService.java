@@ -7,7 +7,9 @@ import com.food.foodapp.model.Category;
 import com.food.foodapp.model.Recipe;
 import com.food.foodapp.repository.CategoryRepository;
 import com.food.foodapp.repository.RecipeRepository;
+import com.food.foodapp.security.MyUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -48,7 +50,13 @@ public class CategoryService {
   // *** GET ALL CATEGORIES
   public List<Category> getCategories() {
     LOGGER.info("Retrieving Categories From Service...");
-    return categoryRepository.findAll();
+    MyUserDetails userDetails = (MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    List<Category> categories = categoryRepository.findByUserId(userDetails.getUser().getId());
+    if (categories.isEmpty()) {
+      throw new InformationNotFoundException("No Categories found for " + userDetails.getUser().getId());
+    } else {
+      return categories;
+    }
   }
 
   //  *** GET SPECIFIC CATEGORY BY ID
@@ -66,11 +74,12 @@ public class CategoryService {
   //  *** CREATE CATEGORY
 //  http://localhost:9092/api/categories/
   public Category createCategory(Category categoryObject) {
-    LOGGER.info("Creating Category....");
-    Category category = categoryRepository.findByName(categoryObject.getName());
+    MyUserDetails userDetails = (MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal(); // check if logged in
+    Category category = categoryRepository.findByUserIdAndName(userDetails.getUser().getId(), categoryObject.getName()); // search for categories attached to userId
     if(category != null) {
-      throw new InformationExistException("Category Name Already In Use: " + category.getName());
+      throw new InformationExistException("Category with name " + category.getName() + " already exists");
     } else {
+      categoryObject.setUser(userDetails.getUser()); // set category.user to userID
       return categoryRepository.save(categoryObject);
     }
   }
